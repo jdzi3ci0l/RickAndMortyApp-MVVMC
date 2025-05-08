@@ -19,3 +19,14 @@ struct Location: Identifiable, Hashable, Codable {
     self.dimension = dimension
   }
 }
+
+#if DEBUG
+extension Location {
+  static let stubEarth: Self = .init(
+    id: 1,
+    name: "Earth",
+    type: "Planet",
+    dimension: "Dimension C-137"
+  )
+}
+#endif

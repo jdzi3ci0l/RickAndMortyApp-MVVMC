@@ -33,7 +33,12 @@ struct CharactersListView: View {
     ScrollView {
       VStack(spacing: 12) {
         ForEach(characters) { character in
-          CharactersListRowView(character: character)
+          Button {
+            viewModel.selectCharacter(character)
+          } label: {
+            CharactersListRowView(character: character)
+              .frame(height: 81)
+          }
         }
       }
       .padding(16)
@@ -43,9 +48,11 @@ struct CharactersListView: View {
   }
 }
 
+#if DEBUG
 #Preview {
   NavigationView {
     CharactersListView(viewModel: .init())
       .navigationTitle("Characters")
   }
 }
+#endif

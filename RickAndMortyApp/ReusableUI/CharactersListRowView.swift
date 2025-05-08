@@ -24,6 +24,7 @@ struct CharactersListRowView: View {
       RoundedRectangle(cornerRadius: 12, style: .continuous)
         .fill(Color.surface)
     )
+    .contentShape(Rectangle())
   }
 
   private var image: some View {
@@ -31,7 +32,6 @@ struct CharactersListRowView: View {
       image
         .resizable()
         .scaledToFit()
-        .frame(width: 81, height: 81)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     } placeholder: {
       ProgressView()

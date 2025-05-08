@@ -39,3 +39,33 @@ struct Character: Identifiable, Hashable, Codable {
     case episodesUrlStrings = "episode"
   }
 }
+
+#if DEBUG
+extension Character {
+  static let stubRick: Self = .init(
+    id: 1,
+    name: "Rick Sanchez",
+    gender: .male,
+    origin: .stubEarth,
+    lastKnownLocation: .stubEarth,
+    imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+    episodesUrlStrings: [
+      "https://rickandmortyapi.com/api/episode/1",
+      "https://rickandmortyapi.com/api/episode/2"
+    ]
+  )
+
+  static let stubMorty: Self = .init(
+    id: 2,
+    name: "Morty Smith",
+    gender: .male,
+    origin: .stubEarth,
+    lastKnownLocation: .stubEarth,
+    imageUrlString: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+    episodesUrlStrings: [
+      "https://rickandmortyapi.com/api/episode/1",
+      "https://rickandmortyapi.com/api/episode/2"
+    ]
+  )
+}
+#endif

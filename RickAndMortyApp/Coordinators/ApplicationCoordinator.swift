@@ -16,6 +16,7 @@ class ApplicationCoordinator: BaseCoordinator<UINavigationController> {
     window.rootViewController = self.presenter
     window.makeKeyAndVisible()
     let charactersCoordinator = CharactersCoordinator(presenter: self.presenter)
+    self.store(coordinator: charactersCoordinator)
     charactersCoordinator.start()
   }
 }
