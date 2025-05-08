@@ -13,10 +13,9 @@ class ApplicationCoordinator: BaseCoordinator<UINavigationController> {
   }
 
   override func start() {
-    window.rootViewController = presenter
+    window.rootViewController = self.presenter
     window.makeKeyAndVisible()
-    let mainCoordinator = MainCoordinator(presenter: presenter)
-    mainCoordinator.start()
-    self.store(coordinator: mainCoordinator)
+    let charactersCoordinator = CharactersCoordinator(presenter: self.presenter)
+    charactersCoordinator.start()
   }
 }
