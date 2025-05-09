@@ -9,7 +9,7 @@ struct CharactersListRowView: View {
   }
 
   var body: some View {
-    HStack {
+    HStack(spacing: 8) {
       image
       Text(character.name)
         .font(.headline)
@@ -36,29 +36,15 @@ struct CharactersListRowView: View {
     } placeholder: {
       ProgressView()
     }
+    .frame(width: 81, height: 81)
   }
 }
 
+#if DEBUG
 #Preview {
-  CharactersListRowView(
-    character: .init(
-      id: 1,
-      name: "Rick Sanchez",
-      gender: .male,
-      origin: .init(
-        id: 1,
-        name: "Earth",
-        type: "Planet",
-        dimension: "Dimension C-137"
-      ),
-      lastKnownLocation: .init(
-        id: 1,
-        name: "Earth",
-        type: "Planet",
-        dimension: "Dimension C-137"
-      ),
-      imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-      episodesUrlStrings: []
-    )
-  )
+  VStack {
+    CharactersListRowView(character: .stubRick)
+    CharactersListRowView(character: .stubMorty)
+  }
 }
+#endif

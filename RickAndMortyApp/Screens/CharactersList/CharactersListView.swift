@@ -4,47 +4,60 @@ struct CharactersListView: View {
 
   @ObservedObject private var viewModel: CharactersListViewModel
 
-  let characters: [Character] = [
-    Character(
-      id: 1,
-      name: "Rick Sanchez",
-      gender: .male,
-      origin: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-      lastKnownLocation: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-      imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-      episodesUrlStrings: []
-    ),
-    Character(
-      id: 2,
-      name: "Morty",
-      gender: .male,
-      origin: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-      lastKnownLocation: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-      imageUrlString: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-      episodesUrlStrings: []
-    )
-  ]
-
   init(viewModel: CharactersListViewModel) {
     self.viewModel = viewModel
   }
 
   var body: some View {
-    ScrollView {
-      VStack(spacing: 12) {
-        ForEach(characters) { character in
-          Button {
-            viewModel.selectCharacter(character)
-          } label: {
-            CharactersListRowView(character: character)
-              .frame(height: 81)
-          }
+    SpacerRespectingScrollView {
+      Group {
+        if let characters = viewModel.characters {
+          charactersList(characters: characters)
+        } else {
+          initialInfoView
         }
       }
-      .padding(16)
+      .padding(UIConstants.defaultScreenPadding)
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color.background.ignoresSafeArea())
+    .loadingOverlay(isLoading: viewModel.isLoading)
+    .animation(.easeInOut, value: viewModel.isLoading)
+    .toolbar { navigationBarTrailingResetButton }
+  }
+
+  private func charactersList(characters: [Character]) -> some View {
+    LazyVStack(spacing: 12) {
+      ForEach(characters) { character in
+        Button {
+          viewModel.selectCharacter(character)
+        } label: {
+          CharactersListRowView(character: character)
+        }
+      }
+    }
+  }
+
+  private var initialInfoView: some View {
+    VStack(spacing: 12) {
+      Spacer()
+      Text("To get started, tap the button below to load characters.")
+        .font(.title)
+        .multilineTextAlignment(.center)
+        .foregroundStyle(Color.textPrimary)
+      Button("Load Characters", action: viewModel.loadCharacters)
+        .buttonStyle(ActionButtonStyle.primary)
+      Spacer()
+    }
+  }
+
+  private var navigationBarTrailingResetButton: some ToolbarContent {
+    ToolbarItem(placement: .navigationBarTrailing) {
+      if !viewModel.isLoading {
+        Button("Reset", action: viewModel.reset)
+          .foregroundStyle(Color.sauceRed)
+      }
+    }
   }
 }
 
