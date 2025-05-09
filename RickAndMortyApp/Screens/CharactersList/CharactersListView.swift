@@ -64,7 +64,7 @@ struct CharactersListView: View {
 #if DEBUG
 #Preview {
   NavigationView {
-    CharactersListView(viewModel: .init())
+    CharactersListView(viewModel: .init(charactersService: MockCharactersService()))
       .navigationTitle("Characters")
   }
 }

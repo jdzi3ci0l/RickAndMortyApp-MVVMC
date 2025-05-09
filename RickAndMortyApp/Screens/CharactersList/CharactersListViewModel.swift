@@ -10,10 +10,18 @@ protocol CharactersListNavigationDelegate: AnyObject {
 
 final class CharactersListViewModel: BaseViewModel, ObservableObject {
 
-  weak var navigationDelegate: CharactersListNavigationDelegate?
-
   @Published private(set) var isLoading: Bool = false
   @Published private(set) var characters: [Character]? = nil
+
+  weak var navigationDelegate: CharactersListNavigationDelegate?
+
+  private let charactersService: CharactersServiceProtocol
+
+  init(
+    charactersService: CharactersServiceProtocol
+  ) {
+    self.charactersService = charactersService
+  }
 
   func loadCharacters() {
     let characters: [Character] = [
@@ -40,7 +48,6 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
   }
 
   func reset() {
-    self.isLoading = false
     self.characters = nil
   }
 

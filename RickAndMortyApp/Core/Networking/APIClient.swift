@@ -10,11 +10,11 @@ protocol APIClientProtocol {
 
 final class RickAndMortyAPIClient: APIClientProtocol {
 
-  private let baseURL: URL
+  private let baseURL = URL(string: "https://rickandmortyapi.com/api/")!
+
   private let session: URLSession
 
-  init(baseURL: URL, session: URLSession = .shared) {
-    self.baseURL = baseURL
+  init(session: URLSession = .shared) {
     self.session = session
   }
 

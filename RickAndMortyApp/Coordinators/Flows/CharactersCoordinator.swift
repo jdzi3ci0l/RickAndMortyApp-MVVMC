@@ -4,8 +4,18 @@ import SwiftUI
 
 final class CharactersCoordinator: BaseCoordinator<UINavigationController> {
 
+  private let container: DIContainer
+
+  init(
+    presenter: UINavigationController,
+    container: DIContainer
+  ) {
+    self.container = container
+    super.init(presenter: presenter)
+  }
+
   override func start() {
-    let viewModel = CharactersListViewModel()
+    let viewModel = CharactersListViewModel(charactersService: container.resolve(CharactersServiceProtocol.self))
     viewModel.navigationDelegate = self
     let view = CharactersListView(viewModel: viewModel)
     let hostingController = HostingController(rootView: view, viewModel: viewModel)

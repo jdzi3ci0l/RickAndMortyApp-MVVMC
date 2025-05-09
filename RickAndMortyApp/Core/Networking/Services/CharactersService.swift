@@ -46,3 +46,30 @@ final class CharactersService: CharactersServiceProtocol {
 struct CharactersResponse: Codable {
   let results: [Character]
 }
+
+#if DEBUG
+// MARK: - MockCharactersService
+final class MockCharactersService: CharactersServiceProtocol {
+
+  var fetchCharactersResult = Result<[Character], Error>.success([.stubRick, .stubMorty])
+  var fetchCharacterResult = Result<Character, Error>.success(.stubRick)
+
+  func fetchCharacters(page: Int) async throws -> [Character] {
+    switch fetchCharactersResult {
+    case .success(let characters):
+      return characters
+    case .failure(let error):
+      throw error
+    }
+  }
+
+  func fetchCharacter(id: Int) async throws -> Character {
+    switch fetchCharacterResult {
+    case .success(let character):
+      return character
+    case .failure(let error):
+      throw error
+    }
+  }
+}
+#endif
