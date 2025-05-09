@@ -1,3 +1,6 @@
 enum Gender: String, Hashable, Codable {
-  case male, female, genderless, unknown
+  case male = "Male"
+  case female = "Female"
+  case genderless = "Genderless"
+  case unknown = "unknown"
 }

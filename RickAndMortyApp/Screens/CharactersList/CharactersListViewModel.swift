@@ -24,27 +24,16 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
   }
 
   func loadCharacters() {
-    let characters: [Character] = [
-      Character(
-        id: 1,
-        name: "Rick Sanchez",
-        gender: .male,
-        origin: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-        lastKnownLocation: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-        imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-        episodesUrlStrings: []
-      ),
-      Character(
-        id: 2,
-        name: "Morty",
-        gender: .male,
-        origin: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-        lastKnownLocation: .init(id: 1, name: "Earth", type: "Planet", dimension: "Dimension C-137"),
-        imageUrlString: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-        episodesUrlStrings: []
-      )
-    ]
-    self.characters = characters
+    Task { @MainActor in
+      isLoading = true
+      defer { isLoading = false }
+      do {
+        let characters = try await charactersService.fetchCharacters(page: 1)
+        self.characters = characters
+      } catch {
+        print("Error fetching characters: \(error)")
+      }
+    }
   }
 
   func reset() {

@@ -10,7 +10,7 @@ protocol APIClientProtocol {
 
 final class RickAndMortyAPIClient: APIClientProtocol {
 
-  private let baseURL = URL(string: "https://rickandmortyapi.com/api/")!
+  private let baseURLString = "https://rickandmortyapi.com/api/"
 
   private let session: URLSession
 
@@ -20,7 +20,8 @@ final class RickAndMortyAPIClient: APIClientProtocol {
 
   func performRequest<T: Decodable>(_ request: APIRequest) async throws -> T {
 
-    let url = baseURL.appendingPathComponent(request.path)
+    guard let url = URL(baseURLString: baseURLString, request: request) else { throw APIError.invalidURL }
+
     var urlRequest = URLRequest(url: url)
 
     urlRequest.httpMethod = request.method.rawValue
@@ -44,3 +45,4 @@ final class RickAndMortyAPIClient: APIClientProtocol {
     return try JSONDecoder().decode(T.self, from: data)
   }
 }
+

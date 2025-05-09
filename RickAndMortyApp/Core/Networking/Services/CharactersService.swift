@@ -11,7 +11,7 @@ protocol CharactersServiceProtocol {
 
 enum CharactersRequests {
   static func characters(forPage page: Int) -> APIRequest {
-    .init(path: "character/?page=\(page)", method: .get)
+    .init(path: "character", method: .get, parameters: ["page": "\(page)"])
   }
 
   static func character(forId id: Int) -> APIRequest {

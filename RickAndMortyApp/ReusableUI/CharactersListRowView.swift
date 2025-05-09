@@ -13,6 +13,7 @@ struct CharactersListRowView: View {
       image
       Text(character.name)
         .font(.headline)
+        .multilineTextAlignment(.leading)
         .foregroundStyle(Color.textPrimary)
       Spacer()
       Image(systemName: "chevron.right")

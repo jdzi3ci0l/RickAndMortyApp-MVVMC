@@ -33,7 +33,6 @@ struct Character: Identifiable, Hashable, Codable {
     case name
     case gender
     case origin
-
     case lastKnownLocation = "location"
     case imageUrlString = "image"
     case episodesUrlStrings = "episode"
