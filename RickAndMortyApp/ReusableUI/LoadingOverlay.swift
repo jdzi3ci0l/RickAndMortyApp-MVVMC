@@ -29,14 +29,8 @@ struct LoadingOverlay<Content: View>: View {
       if isLoading {
         Color.black.opacity(0.5)
           .edgesIgnoringSafeArea(.all)
-        TimelineView(.animation) { context in
-          let angle = context.date.timeIntervalSinceReferenceDate * 180
-          Image.loadingIndicator
-            .resizable()
-            .scaledToFit()
-            .frame(width: 81, height: 81)
-            .rotationEffect(.degrees(angle))
-        }
+        LoadingIndicatorView()
+          .frame(width: 81, height: 81)
       }
     }
   }

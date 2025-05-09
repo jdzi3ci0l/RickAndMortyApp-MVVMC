@@ -21,7 +21,7 @@ struct CharactersListView: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     .background(Color.background.ignoresSafeArea())
-    .loadingOverlay(isLoading: viewModel.isLoading)
+    .loadingOverlay(isLoading: viewModel.shouldUseFullScreenLoadingOverlay)
     .animation(.easeInOut, value: viewModel.isLoading)
     .toolbar { navigationBarTrailingResetButton }
   }
@@ -33,9 +33,17 @@ struct CharactersListView: View {
           viewModel.selectCharacter(character)
         } label: {
           CharactersListRowView(character: character)
+            .onAppear {
+              viewModel.loadMoreCharactersIfNeeded(currentCharacterId: character.id)
+            }
         }
       }
+      if viewModel.isLoading && characters.isNotEmpty {
+        LoadingIndicatorView()
+          .frame(width: 34, height: 34)
+      }
     }
+    .padding(.bottom, 16)
   }
 
   private var initialInfoView: some View {
