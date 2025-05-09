@@ -5,6 +5,7 @@ struct Character: Identifiable, Hashable, Codable {
   let id: Int
   let name: String
   let gender: Gender
+  let status: CharacterStatus
   let origin: Location
   let lastKnownLocation: Location
   let imageUrlString: String
@@ -14,6 +15,7 @@ struct Character: Identifiable, Hashable, Codable {
     id: Int,
     name: String,
     gender: Gender,
+    status: CharacterStatus,
     origin: Location,
     lastKnownLocation: Location,
     imageUrlString: String,
@@ -22,6 +24,7 @@ struct Character: Identifiable, Hashable, Codable {
     self.id = id
     self.name = name
     self.gender = gender
+    self.status = status
     self.origin = origin
     self.lastKnownLocation = lastKnownLocation
     self.imageUrlString = imageUrlString
@@ -32,6 +35,7 @@ struct Character: Identifiable, Hashable, Codable {
     case id
     case name
     case gender
+    case status
     case origin
     case lastKnownLocation = "location"
     case imageUrlString = "image"
@@ -45,6 +49,7 @@ extension Character {
     id: 1,
     name: "Rick Sanchez",
     gender: .male,
+    status: .alive,
     origin: .stubEarth,
     lastKnownLocation: .stubEarth,
     imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
@@ -58,6 +63,7 @@ extension Character {
     id: 2,
     name: "Morty Smith",
     gender: .male,
+    status: .alive,
     origin: .stubEarth,
     lastKnownLocation: .stubEarth,
     imageUrlString: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",

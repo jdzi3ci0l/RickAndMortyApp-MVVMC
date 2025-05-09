@@ -16,7 +16,7 @@ struct CharactersListRowView: View {
         .multilineTextAlignment(.leading)
         .foregroundStyle(Color.textPrimary)
       Spacer()
-      Image(systemName: "chevron.right")
+      Image.chevronRight
         .foregroundStyle(Color.textSecondary)
         .padding(.trailing, 8)
     }
@@ -35,7 +35,8 @@ struct CharactersListRowView: View {
         .scaledToFit()
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     } placeholder: {
-      ProgressView()
+      LoadingIndicatorView()
+        .frame(width: 28, height: 28)
     }
     .frame(width: 81, height: 81)
   }

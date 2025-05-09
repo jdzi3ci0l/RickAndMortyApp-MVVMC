@@ -45,7 +45,7 @@ extension View {
 #if DEBUG
 #Preview {
   LoadingOverlay(isLoading: true) {
-    Color.yellow
+    Color.background.ignoresSafeArea()
   }
 }
 #endif
