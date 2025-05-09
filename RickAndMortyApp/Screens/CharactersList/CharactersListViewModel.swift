@@ -16,7 +16,6 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
   @Published private(set) var characters: [Character]? = nil
 
   func loadCharacters() {
-    self.isLoading = true
     let characters: [Character] = [
       Character(
         id: 1,
