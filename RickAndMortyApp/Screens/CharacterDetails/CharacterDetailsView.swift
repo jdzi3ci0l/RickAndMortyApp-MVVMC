@@ -26,7 +26,6 @@ struct CharacterDetailsView: View {
       }
     }
     .background(Color.background.ignoresSafeArea())
-    .ignoresSafeArea(edges: .top)
   }
 
   private var character: Character { viewModel.character }
@@ -59,16 +58,47 @@ struct CharacterDetailsView: View {
   }
 
   private var episodesSection: some View {
-    VStack(spacing: 12) {
+    VStack(alignment: .leading, spacing: 12) {
       Text("Episodes")
         .font(.title3.bold())
-        .foregroundStyle(Color.textPrimary)
+        .foregroundColor(Color.textPrimary)
+      + Text(" (\(character.episodeNumbers.count))")
+        .font(.title3)
+        .foregroundColor(Color.textSecondary)
+      episodesList
+    }
+  }
+
+  private var episodesList: some View {
+    VStack(alignment: .leading, spacing: 12) {
+      ForEach(character.episodeNumbers, id: \.self) { episodeNumber in
+        Button {
+          Task {
+            await viewModel.openEpisodeDetails(forEpisodeNumber: episodeNumber)
+          }
+        } label: {
+          HStack {
+            Text("Episode \(episodeNumber)")
+              .font(.headline)
+              .foregroundStyle(Color.textPrimary)
+            Spacer()
+            Image.chevronRight
+          }
+          .contentShape(Rectangle())
+        }
+        Divider()
+      }
     }
   }
 }
 
 #if DEBUG
 #Preview {
-  CharacterDetailsView(viewModel: .init(character: .stubRick))
+  CharacterDetailsView(
+    viewModel: .init(
+      character: .stubRick,
+      episodesService: MockEpisodesService()
+    )
+  )
 }
 #endif

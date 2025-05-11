@@ -9,19 +9,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let window = UIWindow(windowScene: windowScene)
 
-    let container = prepareDependencies()
-    applicationCoordinator = ApplicationCoordinator(window: window, container: container)
-    applicationCoordinator?.start()
-  }
+    applicationCoordinator = ApplicationCoordinator(
+      window: window,
+      container: DIContainer.prepareLiveDependencies()
+    )
 
-  func prepareDependencies() -> DIContainer {
-    let container = DIContainer()
-    container.register(APIClientProtocol.self) { _ in
-      RickAndMortyAPIClient()
-    }
-    container.register(CharactersServiceProtocol.self) { resolver in
-      CharactersService(apiClient: resolver.resolve(APIClientProtocol.self))
-    }
-    return container
+    applicationCoordinator?.start()
   }
 }

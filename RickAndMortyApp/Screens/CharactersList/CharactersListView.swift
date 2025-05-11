@@ -21,7 +21,7 @@ struct CharactersListView: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     .background(Color.background.ignoresSafeArea())
-    .loadingOverlay(isLoading: viewModel.shouldUseFullScreenLoadingOverlay)
+    .loadingOverlay(isLoading: viewModel.isPerformingInitialLoad)
     .animation(.easeInOut, value: viewModel.isLoading)
     .toolbar { navigationBarTrailingResetButton }
   }

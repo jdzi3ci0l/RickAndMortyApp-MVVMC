@@ -17,3 +17,21 @@ class DIContainer {
     return factory(self) as! T
   }
 }
+
+extension DIContainer {
+
+  static func prepareLiveDependencies() -> DIContainer {
+    let container = DIContainer()
+    container.register(APIClientProtocol.self) { _ in
+      RickAndMortyAPIClient()
+    }
+    container.register(CharactersServiceProtocol.self) { resolver in
+      CharactersService(apiClient: resolver.resolve(APIClientProtocol.self))
+    }
+    container.register(EpisodesServiceProtocol.self) { resolver in
+      EpisodesService(apiClient: resolver.resolve(APIClientProtocol.self))
+    }
+    return container
+  }
+
+}

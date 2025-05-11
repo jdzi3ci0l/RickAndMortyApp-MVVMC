@@ -2,9 +2,9 @@
 
 class CharactersListNavigationDelegateSpy: CharactersListNavigationDelegate {
 
-  var didSelectCharacterCallsWithCharacter: [Character] = []
+  var didOpenCharacterDetailsWithCharacter: [Character] = []
 
-  func charactersListDidSelectCharacter(_ character: Character) {
-    didSelectCharacterCallsWithCharacter.append(character)
+  func charactersListDidOpenCharacterDetails(_ character: Character) {
+    didOpenCharacterDetailsWithCharacter.append(character)
   }
 }

@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 protocol CharactersListNavigationDelegate: AnyObject {
-  func charactersListDidSelectCharacter(_ character: Character)
+  func charactersListDidOpenCharacterDetails(_ character: Character)
 }
 
 // MARK: - CharactersListViewModel
@@ -65,10 +65,10 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
   }
 
   func selectCharacter(_ character: Character) {
-    navigationDelegate?.charactersListDidSelectCharacter(character)
+    navigationDelegate?.charactersListDidOpenCharacterDetails(character)
   }
 
-  var shouldUseFullScreenLoadingOverlay: Bool {
+  var isPerformingInitialLoad: Bool {
     characters == nil && isLoading
   }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct Character: Identifiable, Hashable, Codable {
+struct Character: Identifiable, Hashable {
 
   let id: Int
   let name: String
@@ -9,7 +9,7 @@ struct Character: Identifiable, Hashable, Codable {
   let origin: Location
   let lastKnownLocation: Location
   let imageUrlString: String
-  let episodesUrlStrings: [String]
+  let episodeNumbers: [Int]
 
   init(
     id: Int,
@@ -19,7 +19,7 @@ struct Character: Identifiable, Hashable, Codable {
     origin: Location,
     lastKnownLocation: Location,
     imageUrlString: String,
-    episodesUrlStrings: [String]
+    episodeNumbers: [Int]
   ) {
     self.id = id
     self.name = name
@@ -28,8 +28,11 @@ struct Character: Identifiable, Hashable, Codable {
     self.origin = origin
     self.lastKnownLocation = lastKnownLocation
     self.imageUrlString = imageUrlString
-    self.episodesUrlStrings = episodesUrlStrings
+    self.episodeNumbers = episodeNumbers
   }
+}
+
+extension Character: Decodable {
 
   enum CodingKeys: String, CodingKey {
     case id
@@ -39,7 +42,23 @@ struct Character: Identifiable, Hashable, Codable {
     case origin
     case lastKnownLocation = "location"
     case imageUrlString = "image"
-    case episodesUrlStrings = "episode"
+    case episodeNumbers = "episode"
+  }
+
+  init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    self.id = try container.decode(Int.self, forKey: .id)
+    self.name = try container.decode(String.self, forKey: .name)
+    self.gender = try container.decode(Gender.self, forKey: .gender)
+    self.status = try container.decode(CharacterStatus.self, forKey: .status)
+    self.origin = try container.decode(Location.self, forKey: .origin)
+    self.lastKnownLocation = try container.decode(Location.self, forKey: .lastKnownLocation)
+    self.imageUrlString = try container.decode(String.self, forKey: .imageUrlString)
+    let episodeUrlStrings = try container.decode([String].self, forKey: .episodeNumbers)
+    self.episodeNumbers = episodeUrlStrings.compactMap {
+      let components = $0.split(separator: "/")
+      return components.last.flatMap { Int($0) }
+    }
   }
 }
 
@@ -53,10 +72,7 @@ extension Character {
     origin: .stubEarth,
     lastKnownLocation: .stubEarth,
     imageUrlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    episodesUrlStrings: [
-      "https://rickandmortyapi.com/api/episode/1",
-      "https://rickandmortyapi.com/api/episode/2"
-    ]
+    episodeNumbers: [1, 2]
   )
 
   static let stubMorty: Self = .init(
@@ -67,10 +83,7 @@ extension Character {
     origin: .stubEarth,
     lastKnownLocation: .stubEarth,
     imageUrlString: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-    episodesUrlStrings: [
-      "https://rickandmortyapi.com/api/episode/1",
-      "https://rickandmortyapi.com/api/episode/2"
-    ]
+    episodeNumbers: [1, 2]
   )
 }
 #endif

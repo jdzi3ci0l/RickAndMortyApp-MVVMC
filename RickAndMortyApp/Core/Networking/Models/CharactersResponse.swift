@@ -1,5 +1,5 @@
 import Foundation
 
-struct CharactersResponse: Codable {
+struct CharactersResponse: Decodable {
   let results: [Character]
 }

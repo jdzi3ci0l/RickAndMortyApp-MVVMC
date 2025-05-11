@@ -42,6 +42,9 @@ final class RickAndMortyAPIClient: APIClientProtocol {
       throw APIError.serverError(statusCode: httpResponse.statusCode)
     }
 
-    return try JSONDecoder().decode(T.self, from: data)
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+    return try decoder.decode(T.self, from: data)
   }
 }

@@ -94,7 +94,7 @@ final class CharactersListViewModelTests {
   func selectCharacter_calls_navigation_delegate() {
     let character = Character.stubRick
     sut.selectCharacter(character)
-    #expect(delegate.didSelectCharacterCallsWithCharacter == [character])
+    #expect(delegate.didOpenCharacterDetailsWithCharacter == [character])
   }
 
   @Test("reset resets state correctly")

@@ -15,7 +15,9 @@ final class CharactersCoordinator: BaseCoordinator<UINavigationController> {
   }
 
   override func start() {
-    let viewModel = CharactersListViewModel(charactersService: container.resolve(CharactersServiceProtocol.self))
+    let viewModel = CharactersListViewModel(
+      charactersService: container.resolve(CharactersServiceProtocol.self)
+    )
     viewModel.navigationDelegate = self
     let view = CharactersListView(viewModel: viewModel)
     let hostingController = HostingController(rootView: view, viewModel: viewModel)
@@ -27,8 +29,11 @@ final class CharactersCoordinator: BaseCoordinator<UINavigationController> {
 // MARK: - CharactersListNavigationDelegate
 
 extension CharactersCoordinator: CharactersListNavigationDelegate {
-  func charactersListDidSelectCharacter(_ character: Character) {
-    let viewModel = CharacterDetailsViewModel(character: character)
+  func charactersListDidOpenCharacterDetails(_ character: Character) {
+    let viewModel = CharacterDetailsViewModel(
+      character: character,
+      episodesService: container.resolve(EpisodesServiceProtocol.self)
+    )
     viewModel.navigationDelegate = self
     let view = CharacterDetailsView(viewModel: viewModel)
     let hostingController = HostingController(rootView: view, viewModel: viewModel)
@@ -40,7 +45,11 @@ extension CharactersCoordinator: CharactersListNavigationDelegate {
 // MARK: - CharacterDetailsNavigationDelegate
 
 extension CharactersCoordinator: CharacterDetailsNavigationDelegate {
-  func characterDetailsDidSelectEpisode() {
-    fatalError("Not implemented")
+  func characterDetailsDidOpenEpisodeDetails(_ episode: Episode) {
+    let viewModel = EpisodeDetailsViewModel(episode: episode)
+    let view = EpisodeDetailsView(viewModel: viewModel)
+    let hostingController = HostingController(rootView: view, viewModel: viewModel)
+    hostingController.title = "Episode \(episode.id)"
+    presenter.pushViewController(hostingController, animated: true)
   }
 }

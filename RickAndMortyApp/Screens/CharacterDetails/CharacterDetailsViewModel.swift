@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 protocol CharacterDetailsNavigationDelegate: AnyObject {
-  func characterDetailsDidSelectEpisode()
+  func characterDetailsDidOpenEpisodeDetails(_ episode: Episode)
 }
 
 // MARK: - CharacterDetailsViewModel
@@ -12,11 +12,26 @@ protocol CharacterDetailsNavigationDelegate: AnyObject {
 @MainActor
 final class CharacterDetailsViewModel: BaseViewModel, ObservableObject {
 
-  weak var navigationDelegate: CharacterDetailsNavigationDelegate?
-
   let character: Character
 
-  init(character: Character) {
+  weak var navigationDelegate: CharacterDetailsNavigationDelegate?
+
+  private let episodesService: EpisodesServiceProtocol
+
+  init(
+    character: Character,
+    episodesService: EpisodesServiceProtocol
+  ) {
     self.character = character
+    self.episodesService = episodesService
+  }
+
+  func openEpisodeDetails(forEpisodeNumber number: Int) async {
+    do {
+      let episode = try await episodesService.fetchEpisode(withNumber: number)
+      navigationDelegate?.characterDetailsDidOpenEpisodeDetails(episode)
+    } catch {
+      print("Error fetching episode details: \(error)")
+    }
   }
 }

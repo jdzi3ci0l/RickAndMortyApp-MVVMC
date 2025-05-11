@@ -3,7 +3,6 @@ import SwiftUI
 class ApplicationCoordinator: BaseCoordinator<UINavigationController> {
 
   let window: UIWindow
-
   private let container: DIContainer
 
   init(
