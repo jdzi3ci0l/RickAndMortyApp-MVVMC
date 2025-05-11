@@ -12,6 +12,7 @@ class BaseCoordinator<ControllerType> where ControllerType: UIViewController {
     self.presenter = presenter
   }
 
+  @MainActor
   func start() {
     preconditionFailure("Start method not implemented")
   }

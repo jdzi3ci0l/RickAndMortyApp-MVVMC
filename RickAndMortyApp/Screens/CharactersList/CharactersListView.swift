@@ -33,8 +33,8 @@ struct CharactersListView: View {
           viewModel.selectCharacter(character)
         } label: {
           CharactersListRowView(character: character)
-            .onAppear {
-              viewModel.loadMoreCharactersIfNeeded(currentCharacterId: character.id)
+            .task {
+              await viewModel.loadMoreCharactersIfNeeded(currentCharacterId: character.id)
             }
         }
       }
@@ -53,8 +53,10 @@ struct CharactersListView: View {
         .font(.title)
         .multilineTextAlignment(.center)
         .foregroundStyle(Color.textPrimary)
-      Button("Load Characters", action: viewModel.loadCharacters)
-        .buttonStyle(ActionButtonStyle.primary)
+      Button("Load Characters") {
+        Task { await viewModel.loadCharacters() }
+      }
+      .buttonStyle(ActionButtonStyle.primary)
       Spacer()
     }
   }

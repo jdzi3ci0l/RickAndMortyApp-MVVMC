@@ -4,7 +4,6 @@ import Foundation
 
 protocol CharactersServiceProtocol {
   func fetchCharacters(page: Int) async throws -> [Character]
-  func fetchCharacter(id: Int) async throws -> Character
 }
 
 // MARK: - CharactersRequests
@@ -12,10 +11,6 @@ protocol CharactersServiceProtocol {
 enum CharactersRequests {
   static func characters(forPage page: Int) -> APIRequest {
     .init(path: "character", method: .get, parameters: ["page": "\(page)"])
-  }
-
-  static func character(forId id: Int) -> APIRequest {
-    .init(path: "character/\(id)", method: .get)
   }
 }
 
@@ -34,11 +29,6 @@ final class CharactersService: CharactersServiceProtocol {
     let response: CharactersResponse = try await apiClient.performRequest(request)
     return response.results
   }
-
-  func fetchCharacter(id: Int) async throws -> Character {
-    let request = CharactersRequests.character(forId: id)
-    return try await apiClient.performRequest(request)
-  }
 }
 
 // MARK: - CharactersResponse
@@ -52,21 +42,13 @@ struct CharactersResponse: Codable {
 final class MockCharactersService: CharactersServiceProtocol {
 
   var fetchCharactersResult = Result<[Character], Error>.success([.stubRick, .stubMorty])
-  var fetchCharacterResult = Result<Character, Error>.success(.stubRick)
+  var fetchCharactersCallsWithPage = [Int]()
 
   func fetchCharacters(page: Int) async throws -> [Character] {
+    fetchCharactersCallsWithPage.append(page)
     switch fetchCharactersResult {
     case .success(let characters):
       return characters
-    case .failure(let error):
-      throw error
-    }
-  }
-
-  func fetchCharacter(id: Int) async throws -> Character {
-    switch fetchCharacterResult {
-    case .success(let character):
-      return character
     case .failure(let error):
       throw error
     }

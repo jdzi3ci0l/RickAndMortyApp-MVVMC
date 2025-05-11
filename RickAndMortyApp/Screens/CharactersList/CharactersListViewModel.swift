@@ -2,19 +2,22 @@ import SwiftUI
 
 // MARK: - CharactersListNavigationDelegate
 
+@MainActor
 protocol CharactersListNavigationDelegate: AnyObject {
   func charactersListDidSelectCharacter(_ character: Character)
 }
 
 // MARK: - CharactersListViewModel
 
+@MainActor
 final class CharactersListViewModel: BaseViewModel, ObservableObject {
 
   @Published private(set) var isLoading: Bool = false
   @Published private(set) var characters: [Character]? = nil
   @Published private(set) var hasMorePages: Bool = true
 
-  private var currentPage: Int = 1
+  private(set) var currentPage: Int = 1
+
   weak var navigationDelegate: CharactersListNavigationDelegate?
 
   private let charactersService: CharactersServiceProtocol
@@ -25,9 +28,8 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
     self.charactersService = charactersService
   }
 
-  func loadCharacters() {
+  func loadCharacters() async {
     guard !isLoading else { return }
-    Task { @MainActor in
       isLoading = true
       defer { isLoading = false }
       do {
@@ -41,10 +43,9 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
       } catch {
         print("Error fetching characters: \(error)")
       }
-    }
   }
 
-  func loadMoreCharactersIfNeeded(currentCharacterId: Int) {
+  func loadMoreCharactersIfNeeded(currentCharacterId: Int) async {
     guard
       let characters = characters,
       !isLoading,
@@ -54,7 +55,7 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
       return
     }
     currentPage += 1
-    loadCharacters()
+    await loadCharacters()
   }
 
   func reset() {

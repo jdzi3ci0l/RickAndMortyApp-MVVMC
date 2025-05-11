@@ -2,12 +2,14 @@ import SwiftUI
 
 // MARK: - CharacterDetailsNavigationDelegate
 
+@MainActor
 protocol CharacterDetailsNavigationDelegate: AnyObject {
   func characterDetailsDidSelectEpisode()
 }
 
 // MARK: - CharacterDetailsViewModel
 
+@MainActor
 final class CharacterDetailsViewModel: BaseViewModel, ObservableObject {
 
   weak var navigationDelegate: CharacterDetailsNavigationDelegate?
