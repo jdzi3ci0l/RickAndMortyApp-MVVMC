@@ -10,7 +10,7 @@ protocol CharactersServiceProtocol {
 
 enum CharactersRequests {
   static func characters(forPage page: Int) -> APIRequest {
-    .init(path: "character", method: .get, parameters: ["page": "\(page)"])
+    .init(path: "/character", method: .get, parameters: ["page": "\(page)"])
   }
 }
 

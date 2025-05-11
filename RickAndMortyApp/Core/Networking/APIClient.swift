@@ -10,7 +10,7 @@ protocol APIClientProtocol {
 
 final class RickAndMortyAPIClient: APIClientProtocol {
 
-  private let baseURLString = "https://rickandmortyapi.com/api/"
+  private let baseURLString = "https://rickandmortyapi.com/api"
 
   private let session: URLSession
 
@@ -45,4 +45,3 @@ final class RickAndMortyAPIClient: APIClientProtocol {
     return try JSONDecoder().decode(T.self, from: data)
   }
 }
-
