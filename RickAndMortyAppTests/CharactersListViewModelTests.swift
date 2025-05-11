@@ -33,6 +33,7 @@ final class CharactersListViewModelTests {
   func loadCharacters_success() async {
     service.fetchCharactersResult = .success([.stubRick, .stubMorty])
     await sut.loadCharacters()
+
     #expect(service.fetchCharactersCallsWithPage == [1])
     #expect(sut.characters == [.stubRick, .stubMorty])
     #expect(sut.isLoading == false)
@@ -43,6 +44,7 @@ final class CharactersListViewModelTests {
   func loadCharacters_failure() async {
     service.fetchCharactersResult = .failure(APIError.serverError(statusCode: 500))
     await sut.loadCharacters()
+
     #expect(service.fetchCharactersCallsWithPage == [1])
     #expect(sut.characters == nil, "Expected characters to remain nil")
     // TODO: Test that error is handled properly
@@ -54,6 +56,7 @@ final class CharactersListViewModelTests {
   func loadCharacters_empty_response() async {
     service.fetchCharactersResult = .success([])
     await sut.loadCharacters()
+
     #expect(sut.characters == [])
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == false)
@@ -63,7 +66,9 @@ final class CharactersListViewModelTests {
   func test_loadCharacters_allows_only_one_concurrent_call() async {
     async let first: () = sut.loadCharacters()
     async let second: () = sut.loadCharacters()
+
     _ = await (first, second)
+
     #expect(service.fetchCharactersCallsWithPage.count == 1, "Expected only one fetch to happen")
   }
 
@@ -71,6 +76,7 @@ final class CharactersListViewModelTests {
   func loadMoreCharactersIfNeeded_not_last_id() async {
     await sut.loadCharacters() // Loading Rick and Morty
     await sut.loadMoreCharactersIfNeeded(currentCharacterId: Character.stubRick.id)
+
     #expect(service.fetchCharactersCallsWithPage == [1], "Expected only one fetch to happen")
     #expect(sut.currentPage == 1)
   }
@@ -79,6 +85,7 @@ final class CharactersListViewModelTests {
   func loadMoreCharactersIfNeeded_last_id() async {
     await sut.loadCharacters() // Loading Rick and Morty
     await sut.loadMoreCharactersIfNeeded(currentCharacterId: Character.stubMorty.id)
+
     #expect(service.fetchCharactersCallsWithPage == [1, 2], "Expected two fetches to happen")
     #expect(sut.currentPage == 2)
   }
@@ -95,10 +102,13 @@ final class CharactersListViewModelTests {
     await sut.loadCharacters() // Loading Rick and Morty
     service.fetchCharactersResult = .success([])
     await sut.loadMoreCharactersIfNeeded(currentCharacterId: Character.stubMorty.id)
+
     #expect(sut.characters == [.stubRick, .stubMorty])
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == false)
+
     sut.reset()
+
     #expect(sut.characters == nil)
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == true)
