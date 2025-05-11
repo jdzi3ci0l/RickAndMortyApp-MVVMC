@@ -27,8 +27,11 @@ final class CharactersServiceTests {
     #expect(apiClient.performRequestCallsWithRequest.count == 1)
     let request = try #require(apiClient.performRequestCallsWithRequest.first)
     #expect(request.path == "/character")
+    #expect(request.method == .get)
+    #expect(request.headers.isEmpty)
     #expect(request.parameters.count == 1)
     #expect(request.parameters["page"] == "1")
+    #expect(request.body == nil)
   }
 
   @Test
@@ -43,7 +46,10 @@ final class CharactersServiceTests {
     #expect(apiClient.performRequestCallsWithRequest.count == 1)
     let request = try #require(apiClient.performRequestCallsWithRequest.first)
     #expect(request.path == "/character")
+    #expect(request.method == .get)
+    #expect(request.headers.isEmpty)
     #expect(request.parameters.count == 1)
     #expect(request.parameters["page"] == "1")
+    #expect(request.body == nil)
   }
 }

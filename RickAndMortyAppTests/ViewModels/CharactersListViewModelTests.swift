@@ -90,11 +90,11 @@ final class CharactersListViewModelTests {
     #expect(sut.currentPage == 2)
   }
 
-  @Test("selectCharacter calls navigation delegate")
+  @Test("selectCharacter calls navigationDelegate")
   func selectCharacter_calls_navigation_delegate() {
     let character = Character.stubRick
     sut.selectCharacter(character)
-    #expect(delegate.didOpenCharacterDetailsWithCharacter == [character])
+    #expect(delegate.didOpenCharacterDetailsCallsWithCharacter == [character])
   }
 
   @Test("reset resets state correctly")
