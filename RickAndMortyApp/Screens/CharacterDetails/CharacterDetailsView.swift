@@ -70,7 +70,7 @@ struct CharacterDetailsView: View {
   }
 
   private var episodesList: some View {
-    VStack(alignment: .leading, spacing: 12) {
+    LazyVStack(alignment: .leading, spacing: 12) {
       ForEach(character.episodeNumbers, id: \.self) { episodeNumber in
         Button {
           Task {
