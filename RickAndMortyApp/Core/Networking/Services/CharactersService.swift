@@ -31,12 +31,6 @@ final class CharactersService: CharactersServiceProtocol {
   }
 }
 
-// MARK: - CharactersResponse
-
-struct CharactersResponse: Codable {
-  let results: [Character]
-}
-
 #if DEBUG
 // MARK: - MockCharactersService
 final class MockCharactersService: CharactersServiceProtocol {
