@@ -32,6 +32,7 @@ struct CharacterDetailsView: View {
     }
     .background(Color.background.ignoresSafeArea())
     .loadingOverlay(isLoading: viewModel.isLoading)
+    .alert(item: $viewModel.alertItem)
     .onAppear(perform: viewModel.onViewAppear)
   }
 

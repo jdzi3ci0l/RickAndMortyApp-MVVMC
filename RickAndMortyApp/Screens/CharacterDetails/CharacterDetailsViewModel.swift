@@ -17,14 +17,16 @@ final class CharacterDetailsViewModel: BaseViewModel, ObservableObject {
   @Published private(set) var isLoading: Bool = false
   @Published var isFavourite: Bool = false {
     didSet {
-      guard isFavourite != oldValue, !isRefreshingFavourites else { return }
+      guard !isRefreshingFavourites, isFavourite != oldValue else { return }
       updateFavourites()
     }
   }
 
-  private var isRefreshingFavourites: Bool = false
+  @Published var alertItem: AlertItem?
 
   weak var navigationDelegate: CharacterDetailsNavigationDelegate?
+
+  private var isRefreshingFavourites: Bool = false
 
   private let episodesService: EpisodesServiceProtocol
   private let persistenceManager: PersistenceManaging
@@ -51,7 +53,7 @@ final class CharacterDetailsViewModel: BaseViewModel, ObservableObject {
       let episode = try await episodesService.fetchEpisode(withNumber: number)
       navigationDelegate?.characterDetailsDidOpenEpisodeDetails(episode)
     } catch {
-      print("Error fetching episode details: \(error)")
+      alertItem = .init(fromError: error)
     }
   }
 

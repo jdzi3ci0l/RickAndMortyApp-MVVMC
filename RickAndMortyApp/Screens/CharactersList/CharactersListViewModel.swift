@@ -18,6 +18,8 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
 
   @Published private(set) var favouriteCharacterIds: Set<Int> = []
 
+  @Published var alertItem: AlertItem?
+
   private(set) var currentPage: Int = 1
 
   weak var navigationDelegate: CharactersListNavigationDelegate?
@@ -44,13 +46,13 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
     do {
       let response = try await charactersService.fetchCharacters(page: currentPage)
       if currentPage == 1 {
-        self.characters = response
+        characters = response
       } else {
-        self.characters?.append(contentsOf: response)
+        characters?.append(contentsOf: response)
       }
       hasMorePages = !response.isEmpty
     } catch {
-      print("Error fetching characters: \(error)")
+      alertItem = .init(fromError: error)
     }
   }
 
@@ -67,7 +69,7 @@ final class CharactersListViewModel: BaseViewModel, ObservableObject {
     await loadCharacters()
   }
 
-  func reset() {
+  func resetCharacters() {
     characters = nil
     currentPage = 1
     hasMorePages = true

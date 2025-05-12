@@ -111,7 +111,7 @@ final class CharactersListViewModelTests {
     #expect(delegate.didOpenCharacterDetailsCallsWithCharacter == [character])
   }
 
-  @Test("reset resets characters and hasMorePages")
+  @Test("resetCharacters resets characters and hasMorePages")
   func reset() async {
     await sut.loadCharacters() // Loading Rick and Morty
     service.fetchCharactersResult = .success([])
@@ -120,7 +120,7 @@ final class CharactersListViewModelTests {
     #expect(sut.characters == [.stubRick, .stubMorty])
     #expect(sut.hasMorePages == false)
 
-    sut.reset()
+    sut.resetCharacters()
 
     #expect(sut.characters == nil)
     #expect(sut.hasMorePages == true)
@@ -130,7 +130,7 @@ final class CharactersListViewModelTests {
   func reset_does_not_reset_favouriteCharacterIds() throws {
     try persistenceManager.save([1, 2], in: Storages.favouriteCharacterIds)
     sut.onViewAppear()
-    sut.reset()
+    sut.resetCharacters()
     #expect(sut.favouriteCharacterIds == [1, 2])
   }
 

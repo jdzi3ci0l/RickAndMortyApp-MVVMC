@@ -22,6 +22,7 @@ struct CharactersListView: View {
     }
     .background(Color.background.ignoresSafeArea())
     .loadingOverlay(isLoading: viewModel.isPerformingInitialLoad)
+    .alert(item: $viewModel.alertItem)
     .animation(.easeInOut, value: viewModel.isLoading)
     .toolbar { navigationBarTrailingResetButton }
     .onAppear(perform: viewModel.onViewAppear)
@@ -68,7 +69,7 @@ struct CharactersListView: View {
   private var navigationBarTrailingResetButton: some ToolbarContent {
     ToolbarItem(placement: .navigationBarTrailing) {
       if !viewModel.isLoading {
-        Button("Reset", action: viewModel.reset)
+        Button("Reset", action: viewModel.resetCharacters)
           .foregroundStyle(Color.sauceRed)
       }
     }
@@ -76,11 +77,27 @@ struct CharactersListView: View {
 }
 
 #if DEBUG
-#Preview {
-  NavigationView {
+#Preview("Success") {
+  let service = MockCharactersService()
+  service.fetchCharactersResult = .success([.stubRick, .stubMorty])
+  return NavigationView {
     CharactersListView(
       viewModel: .init(
-        charactersService: MockCharactersService(),
+        charactersService: service,
+        persistenceManager: InMemoryPersistenceManager()
+      )
+    )
+    .navigationTitle("Characters")
+  }
+}
+
+#Preview("Error") {
+  let service = MockCharactersService()
+  service.fetchCharactersResult = .failure(APIError.serverError(statusCode: 500))
+  return NavigationView {
+    CharactersListView(
+      viewModel: .init(
+        charactersService: service,
         persistenceManager: InMemoryPersistenceManager()
       )
     )
