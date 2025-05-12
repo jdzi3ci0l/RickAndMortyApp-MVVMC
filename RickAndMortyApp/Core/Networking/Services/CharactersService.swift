@@ -36,7 +36,7 @@ final class CharactersService: CharactersServiceProtocol {
 final class MockCharactersService: CharactersServiceProtocol {
 
   var fetchCharactersResult = Result<[Character], Error>.success([.stubRick, .stubMorty])
-  var fetchCharactersCallsWithPage = [Int]()
+  private(set) var fetchCharactersCallsWithPage = [Int]()
 
   func fetchCharacters(page: Int) async throws -> [Character] {
     fetchCharactersCallsWithPage.append(page)

@@ -3,9 +3,11 @@ import SwiftUI
 struct CharactersListRowView: View {
 
   private let character: Character
+  @Binding private var isFavourite: Bool
 
-  init(character: Character) {
+  init(character: Character, isFavourite: Binding<Bool>) {
     self.character = character
+    self._isFavourite = isFavourite
   }
 
   var body: some View {
@@ -16,14 +18,22 @@ struct CharactersListRowView: View {
         .multilineTextAlignment(.leading)
         .foregroundStyle(Color.textPrimary)
       Spacer()
-      Image.chevronRight
-        .foregroundStyle(Color.textSecondary)
-        .padding(.trailing, 8)
+      HStack(spacing: 12) {
+        FavouriteToggle($isFavourite)
+          .foregroundStyle(Color.textPrimary)
+          .font(.title3)
+        Image.chevronRight
+          .foregroundStyle(Color.textSecondary)
+          .padding(.trailing, 8)
+      }
     }
     .padding(8)
     .background(
-      RoundedRectangle(cornerRadius: 12, style: .continuous)
-        .fill(Color.surface)
+      RoundedRectangle(
+        cornerRadius: UIConstants.defaultCardCornerRadius,
+        style: .continuous
+      )
+      .fill(Color.surface)
     )
     .contentShape(Rectangle())
   }
@@ -33,7 +43,12 @@ struct CharactersListRowView: View {
       image
         .resizable()
         .scaledToFit()
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(
+          RoundedRectangle(
+            cornerRadius: UIConstants.defaultCardCornerRadius,
+            style: .continuous
+          )
+        )
     } placeholder: {
       LoadingIndicatorView()
         .frame(width: 28, height: 28)
@@ -45,8 +60,10 @@ struct CharactersListRowView: View {
 #if DEBUG
 #Preview {
   VStack {
-    CharactersListRowView(character: .stubRick)
-    CharactersListRowView(character: .stubMorty)
+    CharactersListRowView(character: .stubRick, isFavourite: .constant(false))
+    CharactersListRowView(character: .stubMorty, isFavourite: .constant(true))
   }
+  .padding(UIConstants.defaultScreenPadding)
+  .background(Color.background)
 }
 #endif

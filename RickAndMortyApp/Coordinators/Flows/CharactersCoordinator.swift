@@ -16,7 +16,8 @@ final class CharactersCoordinator: BaseCoordinator<UINavigationController> {
 
   override func start() {
     let viewModel = CharactersListViewModel(
-      charactersService: container.resolve(CharactersServiceProtocol.self)
+      charactersService: container.resolve(CharactersServiceProtocol.self),
+      persistenceManager: container.resolve(PersistenceManaging.self)
     )
     viewModel.navigationDelegate = self
     let view = CharactersListView(viewModel: viewModel)
@@ -32,7 +33,8 @@ extension CharactersCoordinator: CharactersListNavigationDelegate {
   func charactersListDidOpenCharacterDetails(_ character: Character) {
     let viewModel = CharacterDetailsViewModel(
       character: character,
-      episodesService: container.resolve(EpisodesServiceProtocol.self)
+      episodesService: container.resolve(EpisodesServiceProtocol.self),
+      persistenceManager: container.resolve(PersistenceManaging.self)
     )
     viewModel.navigationDelegate = self
     let view = CharacterDetailsView(viewModel: viewModel)

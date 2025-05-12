@@ -2,7 +2,7 @@
 
 class CharacterDetailsNavigationDelegateSpy: CharacterDetailsNavigationDelegate {
 
-  var didOpenEpisodeDetailsCallsWithEpisode: [Episode] = []
+  private(set) var didOpenEpisodeDetailsCallsWithEpisode: [Episode] = []
 
   func characterDetailsDidOpenEpisodeDetails(_ episode: Episode) {
     didOpenEpisodeDetailsCallsWithEpisode.append(episode)

@@ -13,10 +13,15 @@ struct CharacterDetailsView: View {
       VStack(spacing: 0) {
         characterImage
         VStack(alignment: .leading, spacing: 12) {
-          Text(character.name)
-            .font(.title.bold())
-            .multilineTextAlignment(.leading)
-            .foregroundStyle(Color.textPrimary)
+          HStack {
+            Text(character.name)
+              .font(.title.bold())
+              .multilineTextAlignment(.leading)
+              .foregroundStyle(Color.textPrimary)
+            Spacer()
+            FavouriteToggle($viewModel.isFavourite)
+              .font(.title)
+          }
           basicInfo
           Divider()
           episodesSection
@@ -26,6 +31,8 @@ struct CharacterDetailsView: View {
       }
     }
     .background(Color.background.ignoresSafeArea())
+    .loadingOverlay(isLoading: viewModel.isLoading)
+    .onAppear(perform: viewModel.onViewAppear)
   }
 
   private var character: Character { viewModel.character }
@@ -97,7 +104,8 @@ struct CharacterDetailsView: View {
   CharacterDetailsView(
     viewModel: .init(
       character: .stubRick,
-      episodesService: MockEpisodesService()
+      episodesService: MockEpisodesService(),
+      persistenceManager: InMemoryPersistenceManager()
     )
   )
 }

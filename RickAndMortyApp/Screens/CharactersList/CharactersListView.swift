@@ -24,6 +24,7 @@ struct CharactersListView: View {
     .loadingOverlay(isLoading: viewModel.isPerformingInitialLoad)
     .animation(.easeInOut, value: viewModel.isLoading)
     .toolbar { navigationBarTrailingResetButton }
+    .onAppear(perform: viewModel.onViewAppear)
   }
 
   private func charactersList(characters: [Character]) -> some View {
@@ -32,10 +33,13 @@ struct CharactersListView: View {
         Button {
           viewModel.selectCharacter(character)
         } label: {
-          CharactersListRowView(character: character)
-            .task {
-              await viewModel.loadMoreCharactersIfNeeded(currentCharacterId: character.id)
-            }
+          CharactersListRowView(
+            character: character,
+            isFavourite: viewModel.isFavouriteBinding(for: character)
+          )
+          .task {
+            await viewModel.loadMoreCharactersIfNeeded(currentCharacterId: character.id)
+          }
         }
       }
       if viewModel.isLoading && characters.isNotEmpty {
@@ -74,8 +78,13 @@ struct CharactersListView: View {
 #if DEBUG
 #Preview {
   NavigationView {
-    CharactersListView(viewModel: .init(charactersService: MockCharactersService()))
-      .navigationTitle("Characters")
+    CharactersListView(
+      viewModel: .init(
+        charactersService: MockCharactersService(),
+        persistenceManager: InMemoryPersistenceManager()
+      )
+    )
+    .navigationTitle("Characters")
   }
 }
 #endif

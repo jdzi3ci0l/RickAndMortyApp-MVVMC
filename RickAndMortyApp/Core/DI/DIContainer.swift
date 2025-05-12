@@ -31,6 +31,9 @@ extension DIContainer {
     container.register(EpisodesServiceProtocol.self) { resolver in
       EpisodesService(apiClient: resolver.resolve(APIClientProtocol.self))
     }
+    container.register(PersistenceManaging.self) { _ in
+      UserDefaultsPersistenceManager()
+    }
     return container
   }
 

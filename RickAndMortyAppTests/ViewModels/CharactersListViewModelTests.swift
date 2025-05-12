@@ -5,13 +5,18 @@ import Testing
 final class CharactersListViewModelTests {
 
   private var service: MockCharactersService!
+  private var persistenceManager: MockPersistenceManager!
   private var delegate: CharactersListNavigationDelegateSpy!
   private var sut: CharactersListViewModel!
 
   init() {
     service = MockCharactersService()
+    persistenceManager = MockPersistenceManager()
     delegate = CharactersListNavigationDelegateSpy()
-    sut = CharactersListViewModel(charactersService: service)
+    sut = CharactersListViewModel(
+      charactersService: service,
+      persistenceManager: persistenceManager
+    )
     sut.navigationDelegate = delegate
   }
 
@@ -24,9 +29,18 @@ final class CharactersListViewModelTests {
   @Test
   func initial_state() {
     #expect(sut.characters == nil)
+    #expect(sut.favouriteCharacterIds == [])
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == true)
     #expect(sut.currentPage == 1)
+  }
+
+  @Test("onViewAppear refreshes favourites from Storage")
+  func onViewAppear() throws {
+    try persistenceManager.save([1, 2], in: Storages.favouriteCharacterIds)
+    sut.onViewAppear()
+    #expect(persistenceManager.loadCallsWithStorageKeys == [Storages.favouriteCharacterIds.key])
+    #expect(sut.favouriteCharacterIds == [1, 2])
   }
 
   @Test
@@ -97,20 +111,59 @@ final class CharactersListViewModelTests {
     #expect(delegate.didOpenCharacterDetailsCallsWithCharacter == [character])
   }
 
-  @Test("reset resets state correctly")
+  @Test("reset resets characters and hasMorePages")
   func reset() async {
     await sut.loadCharacters() // Loading Rick and Morty
     service.fetchCharactersResult = .success([])
     await sut.loadMoreCharactersIfNeeded(currentCharacterId: Character.stubMorty.id)
 
     #expect(sut.characters == [.stubRick, .stubMorty])
-    #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == false)
 
     sut.reset()
 
     #expect(sut.characters == nil)
-    #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == true)
+  }
+
+  @Test("reset does not reset favouriteCharacterIds")
+  func reset_does_not_reset_favouriteCharacterIds() throws {
+    try persistenceManager.save([1, 2], in: Storages.favouriteCharacterIds)
+    sut.onViewAppear()
+    sut.reset()
+    #expect(sut.favouriteCharacterIds == [1, 2])
+  }
+
+  @Test
+  func isFavouriteBinding_getter() throws {
+    let character = Character.stubRick
+    #expect(sut.isFavouriteBinding(for: character).wrappedValue == false)
+
+    try persistenceManager.save([character.id], in: Storages.favouriteCharacterIds)
+    sut.onViewAppear()
+
+    #expect(sut.isFavouriteBinding(for: character).wrappedValue == true)
+  }
+
+  @Test
+  func isFavouriteBinding_setter() throws {
+    let character = Character.stubRick
+    #expect(sut.isFavouriteBinding(for: character).wrappedValue == false)
+
+    sut.isFavouriteBinding(for: character).wrappedValue = true
+    #expect(sut.favouriteCharacterIds == [character.id])
+    #expect(persistenceManager.saveCallsWithValueAndStorageKeys.count == 1)
+    let firstSaveCall = try #require(persistenceManager.saveCallsWithValueAndStorageKeys.first)
+    let savedIds = try #require(firstSaveCall.value as? Set<Int>)
+    #expect(savedIds == [character.id])
+    #expect(firstSaveCall.storageKey == Storages.favouriteCharacterIds.key)
+
+    sut.isFavouriteBinding(for: character).wrappedValue = false
+    #expect(sut.favouriteCharacterIds == [])
+    #expect(persistenceManager.saveCallsWithValueAndStorageKeys.count == 2)
+    let secondSaveCall = try #require(persistenceManager.saveCallsWithValueAndStorageKeys.last)
+    let savedIds2 = try #require(secondSaveCall.value as? Set<Int>)
+    #expect(savedIds2 == [])
+    #expect(secondSaveCall.storageKey == Storages.favouriteCharacterIds.key)
   }
 }
