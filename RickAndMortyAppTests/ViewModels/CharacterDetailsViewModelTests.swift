@@ -46,10 +46,10 @@ final class CharacterDetailsViewModelTests {
   @Test("Setting isFavourite to true adds character to favourites storage")
   func isFavourite_set_to_true() throws {
     sut.isFavourite = true
-    
+
     #expect(persistenceManager.loadCallsWithStorageKeys.count == 1)
     #expect(persistenceManager.saveCallsWithValueAndStorageKeys.count == 1)
-    
+
     let saveCall = try #require(persistenceManager.saveCallsWithValueAndStorageKeys.first)
     let savedIds = try #require(saveCall.value as? Set<Int>)
     #expect(savedIds == [Character.stubRick.id])

@@ -13,7 +13,7 @@ protocol CharactersListNavigationDelegate: AnyObject {
 final class CharactersListViewModel: BaseViewModel, ObservableObject {
 
   @Published private(set) var isLoading: Bool = false
-  @Published private(set) var characters: [Character]? = nil
+  @Published private(set) var characters: [Character]?
   @Published private(set) var hasMorePages: Bool = true
 
   @Published private(set) var favouriteCharacterIds: Set<Int> = []

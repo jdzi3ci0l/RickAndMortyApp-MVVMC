@@ -10,7 +10,11 @@ final class MockAPIClient: APIClientProtocol {
     performRequestCallsWithRequest.append(request)
     switch result {
     case .success(let response):
-      guard let response = response as? T else { throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Type mismatch")) }
+      guard
+        let response = response as? T
+      else {
+        throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Type mismatch"))
+      }
       return response
     case .failure(let error):
       throw error
