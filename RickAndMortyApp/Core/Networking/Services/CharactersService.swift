@@ -33,6 +33,7 @@ final class CharactersService: CharactersServiceProtocol {
 
 #if DEBUG
 // MARK: - MockCharactersService
+
 final class MockCharactersService: CharactersServiceProtocol {
 
   var fetchCharactersResult = Result<[Character], Error>.success([.stubRick, .stubMorty])

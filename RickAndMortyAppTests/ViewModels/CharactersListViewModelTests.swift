@@ -33,6 +33,7 @@ final class CharactersListViewModelTests {
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == true)
     #expect(sut.currentPage == 1)
+    #expect(sut.alertItem == nil)
   }
 
   @Test("onViewAppear refreshes favourites from Storage")
@@ -43,7 +44,7 @@ final class CharactersListViewModelTests {
     #expect(sut.favouriteCharacterIds == [1, 2])
   }
 
-  @Test
+  @Test("loadCharacters sets characters on API call success")
   func loadCharacters_success() async {
     service.fetchCharactersResult = .success([.stubRick, .stubMorty])
     await sut.loadCharacters()
@@ -54,14 +55,17 @@ final class CharactersListViewModelTests {
     #expect(sut.hasMorePages == true)
   }
 
-  @Test
-  func loadCharacters_failure() async {
-    service.fetchCharactersResult = .failure(APIError.serverError(statusCode: 500))
+  @Test("loadCharacters set alertItem on API call failure")
+  func loadCharacters_failure() async throws {
+    let error = APIError.serverError(statusCode: 500)
+    service.fetchCharactersResult = .failure(error)
     await sut.loadCharacters()
 
     #expect(service.fetchCharactersCallsWithPage == [1])
+
+    let item = try #require(sut.alertItem)
+    #expect(item.isEqualIgnoringActions(to: AlertItem(fromError: error)))
     #expect(sut.characters == nil, "Expected characters to remain nil")
-    // TODO: Test that error is handled properly
     #expect(sut.isLoading == false)
     #expect(sut.hasMorePages == true)
   }

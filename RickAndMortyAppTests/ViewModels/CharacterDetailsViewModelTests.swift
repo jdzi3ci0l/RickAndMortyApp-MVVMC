@@ -32,6 +32,7 @@ final class CharacterDetailsViewModelTests {
     #expect(sut.character == .stubRick)
     #expect(sut.isFavourite == false)
     #expect(sut.isLoading == false)
+    #expect(sut.alertItem == nil)
   }
 
   @Test("onViewAppear refreshes favourite status from Storage")
@@ -85,13 +86,16 @@ final class CharacterDetailsViewModelTests {
     #expect(delegate.didOpenEpisodeDetailsCallsWithEpisode == [.stub])
   }
 
-  @Test("openEpisodeDetails does not call navigationDelegate on API call failure")
-  func openEpisodeDetails_failure() async {
-    service.fetchEpisodeResult = .failure(APIError.serverError(statusCode: 500))
+  @Test("openEpisodeDetails sets alertItem on API call failure")
+  func openEpisodeDetails_failure() async throws {
+    let error = APIError.serverError(statusCode: 500)
+    service.fetchEpisodeResult = .failure(error)
 
     await sut.openEpisodeDetails(forEpisodeNumber: 1)
 
     #expect(service.fetchEpisodeCallsWithNumber == [1])
     #expect(delegate.didOpenEpisodeDetailsCallsWithEpisode.isEmpty)
+    let item = try #require(sut.alertItem)
+    #expect(item.isEqualIgnoringActions(to: AlertItem(fromError: error)))
   }
 }

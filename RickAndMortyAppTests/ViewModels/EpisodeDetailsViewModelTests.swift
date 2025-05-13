@@ -19,3 +19,4 @@ final class EpisodeDetailsViewModelTests {
     #expect(sut.episode == .stub)
   }
 }
+
