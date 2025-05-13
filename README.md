@@ -2,7 +2,7 @@
 
 A small SwiftUI project built as a solution to a recruitment task.
 
-![App Demo](img/rickAndMortyAppPreview.mp4)
+https://github.com/user-attachments/assets/ceb2d775-7097-4da7-9aaf-4bd252c574f9
 
 The app fetches data from the [Rick and Morty API](https://rickandmortyapi.com/) and acts as a character browser.
 
@@ -17,7 +17,7 @@ Some of the main technical requirements included:
 - Minimum Deployment Target - iOS 15.0 - ✅
 
 With "Nice to have" including:
-- TCA (The Composable Architecture) - ❌*
+- TCA (The Composable Architecture) - ❌*  
 <sub>*Picked MVVM-C instead because I'm a bit more fluent in it.</sub>
 - Usage of native components - ✅
 - Error handling - ✅
@@ -27,6 +27,8 @@ With "Nice to have" including:
 
 ## App flow
 
-1. **CharactersListView** initially shows a static instruction message and a button to load characters from the API - once they are loaded, a scrollable list is displayed. Additionally, a reset button should be always available for the user to go back to the initial state (showing instructions).
-2. **CharacterDetailsView** opens after user selects a character from the list, showing character details. Below the character info, there's a list of episodes the character appears in, shown as: `Episode <episodeNumber>`.
+1. **CharactersListView** initially shows a static instruction message and a button to load characters from the API - once they are loaded, a scrollable list is displayed.  
+Additionally, a reset button should be always available for the user to go back to the initial state (showing instructions).
+2. **CharacterDetailsView** opens after user selects a character from the list, showing character details. 
+Below the character info, there's a list of episodes the character appears in, shown as: `Episode <episodeNumber>`.
 3. **CharacterDetailsView** is triggered when tapping an episode from the character details screen. It displays episode data like its name, air date and total number of characters appearing in that episode.
